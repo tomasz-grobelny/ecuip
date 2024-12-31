@@ -16,7 +16,7 @@ This project delas with both electric (ceramic) and indiction cooktops make by E
 
 If you have any (potentially broken) Electrolux electric/induction cooktop/hob device to spare for the project please let me know. We might want to:
  * Get the device sent to me - especially if you are located in Poland or nearby - otherwise the logistic costs might not be worth it,
- * Arrange for a session to collect device specific information on the spot where the device is located; note this requires some technical knowledge and (relativelt cheap) equipment on your part.
+ * Arrange for a session to collect device specific information on the spot where the device is located; note this requires some technical knowledge and (relatively cheap) equipment on your part.
 
 ## Objectives
 There are two main objectives of the project:
