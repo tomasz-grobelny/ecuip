@@ -81,5 +81,5 @@ Here are a couple of observations:
  * The last byte, for both main message and ACK is XOR of all previous bytes
  * ACK consists of byte 98, last byte of the acknowledged message and then XOR of the last two bytes
  * Bytes 3 and 2 from the end of the message seem to have different meaning depending on direction:
-   * UIB -> MPB: CRC of all previous bytes (CRC RevEng identified it as: width=16  poly=0x1021  init=0x1d0f  refin=false  refout=false  xorout=0x0000  check=0xe5cc  residue=0x0000  name="CRC-16/SPI-FUJITSU")
+   * UIB -> MPB: CRC of all previous bytes (CRC RevEng identified it as: width=16  poly=0x1021  init=0x1d0f  refin=false  refout=false  xorout=0x0000  check=0xe5cc  residue=0x0000  name="CRC-16/SPI-FUJITSU"), see [calcCrc.cpp](calcCrc.cpp) for sample code
    * MPB -> UIB: timestamp with 20ms resolution
