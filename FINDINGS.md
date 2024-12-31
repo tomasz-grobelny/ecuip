@@ -27,27 +27,39 @@ Thanks to help from [Electrical Engineering user](https://electronics.stackexcha
 This session was collected by pressing the power button, pressing 4 for one of the fields, pressing 0 for the same field and pressing power button again.
 
 ping:
+
 C9 2C 24 0B 25 03 00 0C 0C 0C 0C 0E 0E C4 FD D5 -> 98 D5 4D
+
 C9 24 2C 0C 2A 00 00 00 00 00 00 00 00 00 88 DD B2 -> 98 B2 2A
 
 on:
+
 C9 24 2C 0C 2A 00 01 00 00 00 00 00 00 00 CF 0E 27 -> 98 27 BF
+
 C9 2C 24 0B 25 03 01 0C 0C 0C 0C 0E 0E C5 9A B2 -> 98 B2 2A
 
 4:
+
 C9 24 2C 0C 2A 00 03 00 **0C 00 00 00** 00 00 4B 4B E8 -> 98 E8 70
+
 C9 2C 24 0B 25 03 03 0D 0C 0C 0C 0E 0E C6 0E 26 -> 98 26 BE
 
 0:
+
 C9 24 2C 0C 2A 00 01 00 **00 00 00 00** 00 00 CF 0E 27 -> 98 27 BF
+
 C9 2C 24 0B 25 03 01 0C 0C 0C 0C 0E 0E C6 BC 97 -> 98 97 0F
 
 off:
+
 C9 24 2C 0C 2A 00 00 00 00 00 00 00 00 00 88 DD B2 -> 98 B2 2A
+
 C9 2C 24 0B 25 03 00 0C 0C 0C 0C 0E 0E C7 53 78 -> 98 78 E0
 
-ping
+ping:
+
 C9 2C 24 0B 25 03 00 0C 0C 0C 0C 0E 0E C9 3B 1E -> 98 1E 86
+
 C9 24 2C 0C 2A 00 00 00 00 00 00 00 00 00 88 DD B2 -> 98 B2 2A
 
 ## Protocol
