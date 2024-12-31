@@ -42,13 +42,13 @@ C9 2C 24 0B 25 03 01 0C 0C 0C 0C 0E 0E C5 9A B2 -> 98 B2 2A
 
 C9 24 2C 0C 2A 00 03 00 **0C 00 00 00** 00 00 4B 4B E8 -> 98 E8 70
 
-C9 2C 24 0B 25 03 03 0D 0C 0C 0C 0E 0E C6 0E 26 -> 98 26 BE
+C9 2C 24 0B 25 03 03 **0D 0C 0C 0C** 0E 0E C6 0E 26 -> 98 26 BE
 
 0:
 
 C9 24 2C 0C 2A 00 01 00 **00 00 00 00** 00 00 CF 0E 27 -> 98 27 BF
 
-C9 2C 24 0B 25 03 01 0C 0C 0C 0C 0E 0E C6 BC 97 -> 98 97 0F
+C9 2C 24 0B 25 03 01 **0C 0C 0C 0C** 0E 0E C6 BC 97 -> 98 97 0F
 
 off:
 
@@ -78,8 +78,10 @@ Here are a couple of observations:
    * 9->12
    * 10->13
    * 14->17
+ * For MPB -> UIB communication the fields in bold contain eg. info about zone temperature, with 8C meaning hot zone (lowest level), 0D is not clear to me, but maybe it just indicates that it is heating?
  * The last byte, for both main message and ACK is XOR of all previous bytes
  * ACK consists of byte 98, last byte of the acknowledged message and then XOR of the last two bytes
  * Bytes 3 and 2 from the end of the message seem to have different meaning depending on direction:
    * UIB -> MPB: CRC of all previous bytes (CRC RevEng identified it as: width=16  poly=0x1021  init=0x1d0f  refin=false  refout=false  xorout=0x0000  check=0xe5cc  residue=0x0000  name="CRC-16/SPI-FUJITSU"), see [calcCrc.cpp](calcCrc.cpp) for sample code
    * MPB -> UIB: timestamp with 20ms resolution
+ 
