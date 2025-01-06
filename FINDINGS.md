@@ -78,7 +78,7 @@ Here are a couple of observations:
    * 9->12
    * 10->13
    * 14->17
- * For MPB -> UIB communication the fields in bold contain eg. info about zone temperature, with 8C meaning hot zone (lowest level), 0D is not clear to me, but maybe it just indicates that it is heating?
+ * For MPB -> UIB communication the fields in bold contain eg. info about zone temperature (hot zone: 8C => 1 bar, 4c => 2 bars, cc => 3 bars), 0D is not clear to me, but maybe it just indicates that it is heating?
  * The last byte, for both main message and ACK is XOR of all previous bytes
  * ACK consists of byte 98, last byte of the acknowledged message and then XOR of the last two bytes
  * Bytes 3 and 2 from the end of the message seem to have different meaning depending on direction:
