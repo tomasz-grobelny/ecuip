@@ -2,7 +2,7 @@
 Electrolux Cooktop User Interface Protocol
 
 ## Background
-Electrolux Cooktop home appliances consist of 3 main parts:
+Electrolux Cooktop/Hob home appliances consist of 3 main parts:
  * User interface board (UIB)
  * Main power board (MPB)
  * Effectors
