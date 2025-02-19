@@ -10,6 +10,7 @@ class PacketReceiver
   int remainingLength;
   cppQueue packetQueue;
   int lastErrorCode;
+  unsigned long lastInputTime=0;
 public:
   PacketReceiver(CustomSoftwareSerial& css);
   void clearInput();
@@ -17,4 +18,5 @@ public:
   bool isPacketAvailable();
   void dequeuePacket(Packet& packet);
   int getErrorCode();
+  unsigned long getLastInputTime();
 };

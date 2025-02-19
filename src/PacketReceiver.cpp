@@ -1,4 +1,5 @@
 #include "PacketReceiver.h"
+#include <Arduino.h>
 
 PacketReceiver::PacketReceiver(CustomSoftwareSerial& css) : customSerial(css), packetQueue(sizeof(Packet), 10, FIFO), lastErrorCode(0)
 {
@@ -16,9 +17,10 @@ bool PacketReceiver::processInput()
   lastErrorCode=0;
   while (customSerial.available()) {
     uint8_t currentByte = customSerial.read();
+    lastInputTime = millis();
     if(currentPacket.length()==0 && currentByte!=0xc9 && currentByte!=0x98)
     {
-      lastErrorCode=1;
+      lastErrorCode=10+currentByte;
       break;
     }
     if(currentPacket.length()>30)
@@ -62,4 +64,9 @@ void PacketReceiver::dequeuePacket(Packet& packet)
 int PacketReceiver::getErrorCode()
 {
   return lastErrorCode;
+}
+
+unsigned long PacketReceiver::getLastInputTime()
+{
+  return lastInputTime;
 }

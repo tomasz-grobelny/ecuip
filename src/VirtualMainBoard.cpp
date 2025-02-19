@@ -16,17 +16,15 @@ void VirtualMainBoard::processPacket(class Packet& packet)
     atLeastOneOn=false;
     for(auto i=0;i<4;i++)
       zoneSetting[i]=0;
-    delay(20);
-    fsm.trigger(SEND_RESPONSE);
+    idleEnter();
   }
   if(packet.isDataPacket() && packet.getByte(4)==0x2A && packet.getByte(6)==0x01)
-    {
+  {
     overallOn=true;
     atLeastOneOn=false;
     for(auto i=0;i<4;i++)
       zoneSetting[i]=0;
-    delay(20);
-    fsm.trigger(SEND_RESPONSE);
+    idleEnter();
   }
   if(packet.isDataPacket() && packet.getByte(4)==0x2A && packet.getByte(6)==0x03)
   {
@@ -34,24 +32,37 @@ void VirtualMainBoard::processPacket(class Packet& packet)
     atLeastOneOn=true;
     for(auto i=0;i<4;i++)
       zoneSetting[i]=packet.getByte(8+i);
-    delay(20);
-    fsm.trigger(SEND_RESPONSE);
+    idleEnter();
   }
 }
 
-void VirtualMainBoard::handshakeEnter()
+void VirtualMainBoard::handshake0Enter()
 {
-  initComm();
+  pinMode(3, OUTPUT);
+  digitalWrite(3, HIGH);
+  packetReceiver.clearInput();
+}
+
+void VirtualMainBoard::handshake1Enter()
+{
+  digitalWrite(3, LOW);
+}
+
+void VirtualMainBoard::handshakeCompleteEnter()
+{
+  pinMode(3, INPUT);
+  packetReceiver.clearInput();
 
   uint8_t buf[]={0xC9, 0x2C, 0x24, 0x04, 0x21, 0x02, 0x00, 0x02};
   packetSender.sendWithCrc8(buf, sizeof(buf));
 }
 
-void VirtualMainBoard::handshakeExit()
+void VirtualMainBoard::handshakeCompleteExit()
 {
   millisAtHandshakeExit = millis();
   uint8_t buf[]={0xC9, 0x2C, 0x24, 0x0B, 0x25, 0x03, 0x00, 0x0C, 0x0C, 0x0C, 0x0C, 0x0E, 0x0E, 0x00, 0x18};
   packetSender.sendWithCrc8(buf, sizeof(buf));
+  Serial.println("handshake complete");
 }
 
 void VirtualMainBoard::idleEnter()
@@ -69,29 +80,20 @@ void VirtualMainBoard::idleEnter()
   packetSender.sendWithCrc8(buf, sizeof(buf));
 }
 
-void VirtualMainBoard::initComm()
-{
-  Serial.println("initComm");
-  pinMode(3, OUTPUT);
-  digitalWrite(3, HIGH);
-  delay(132);
-  digitalWrite(3, LOW);
-  delay(20);
-  pinMode(3, INPUT);
-  packetReceiver.clearInput();
-}
-
 VirtualMainBoard::VirtualMainBoard(PacketReceiver& pr, PacketSender& ps) : 
   packetSender(ps), 
   packetReceiver(pr),
   initial(NULL, NULL, NULL),
-  handshake(handshakeEnterWrapper, NULL, handshakeExitWrapper),
-  idle(idleEnterWrapper, NULL, NULL),
+  handshake0([](void* context){((VirtualMainBoard*)context)->handshake0Enter();}, NULL, NULL),
+  handshake1([](void* context){((VirtualMainBoard*)context)->handshake1Enter();}, NULL, NULL),
+  handshakeComplete([](void* context){((VirtualMainBoard*)context)->handshakeCompleteEnter();}, NULL, [](void* context){((VirtualMainBoard*)context)->handshakeCompleteExit();}),
+  idle([](void* context){((VirtualMainBoard*)context)->idleEnter();}, NULL, NULL),
   fsm(&initial, this)
 {
-  fsm.add_transition(&initial, &handshake, START_HANDSHAKE, NULL);
-  fsm.add_transition(&handshake, &idle, RECEIVED_HANDSHAKE_RESPONSE, NULL);
-  fsm.add_transition(&idle, &idle, SEND_RESPONSE, NULL);
+  fsm.add_transition(&initial, &handshake0, START_HANDSHAKE, NULL);
+  fsm.add_timed_transition(&handshake0, &handshake1, 130, NULL);
+  fsm.add_timed_transition(&handshake1, &handshakeComplete, 50, NULL);
+  fsm.add_transition(&handshakeComplete, &idle, RECEIVED_HANDSHAKE_RESPONSE, NULL);
   fsm.add_timed_transition(&idle, &idle, 10000, NULL);
   for(auto i=0;i<4;i++)
     zoneState[i]=0;
@@ -124,6 +126,7 @@ void VirtualMainBoard::process()
       processPacket(packet);
     }
   }
+  packetSender.processOutput(packetReceiver.getLastInputTime());
   fsm.run_machine();
 }
 
@@ -133,7 +136,7 @@ void VirtualMainBoard::setState(Zone zone, ZoneState state)
   char buf[25];
   sprintf(buf, "setState: %02x, %02x", zone, state);
   Serial.println(buf);
-  fsm.trigger(SEND_RESPONSE);
+  idleEnter();
 }
 
 int VirtualMainBoard::getSetting(Zone zone)

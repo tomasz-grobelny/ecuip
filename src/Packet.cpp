@@ -1,8 +1,15 @@
 #include "Packet.h"
+#include <Arduino.h>
 
 Packet::Packet()
 {
   reset();
+}
+
+Packet::Packet(const uint8_t* inputBuffer, size_t size)
+{
+  memcpy(buffer, inputBuffer, size);
+  currentIndex = size;
 }
 
 void Packet::reset()
@@ -38,6 +45,11 @@ bool Packet::isDataPacket() const
 int Packet::length() const
 {
   return currentIndex;
+}
+
+const uint8_t* Packet::getBuffer() const
+{
+  return buffer;
 }
 
 void Packet::pushByte(uint8_t currentByte)

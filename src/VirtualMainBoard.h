@@ -8,7 +8,6 @@
 
 #define START_HANDSHAKE 1
 #define RECEIVED_HANDSHAKE_RESPONSE 2
-#define SEND_RESPONSE 3
 
 enum Zone
 {
@@ -37,32 +36,21 @@ class VirtualMainBoard
   bool atLeastOneOn=false;
 
   State initial;
-  State handshake;
+  State handshake0;
+  State handshake1;
+  State handshakeComplete;
   State idle;
   Fsm fsm;
 
   void processPacket(class Packet& packet);
 
-  static void handshakeEnterWrapper(void* context)
-  {
-    ((VirtualMainBoard*)context)->handshakeEnter();
-  }
-  void handshakeEnter();
-
+  void handshake0Enter();
+  void handshake1Enter();
+  void handshakeCompleteEnter();
   unsigned long millisAtHandshakeExit;
-  static void handshakeExitWrapper(void* context)
-  {
-    ((VirtualMainBoard*)context)->handshakeExit();
-  }
-  void handshakeExit();
-
-  static void idleEnterWrapper(void* context)
-  {
-    ((VirtualMainBoard*)context)->idleEnter();
-  }
+  void handshakeCompleteExit();
   void idleEnter();
 
-  void initComm();
 public:
   VirtualMainBoard(PacketReceiver& pr, PacketSender& ps);
   void start();
