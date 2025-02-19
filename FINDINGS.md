@@ -71,13 +71,21 @@ Here are a couple of observations:
  * Next byte seems to be length of the remaining message; "seems" here means that this theory matches the two examples I could collect (see 0B and 0C above)
  * Next few bytes seems to be action/state specific, 2A/25 seem to be fixed depending on message direction, a few protocol fields corresponding to cooking zones (in bold), note that UI values may need conversion to protocol values, eg. for my hob it looks like this:
    * 0->00
+   * 1->02
    * 2->08
    * 3->0B
    * 4->0C
    * 5->0E
+   * 6->0F
+   * 7->10
+   * 8->11
    * 9->12
    * 10->13
+   * 11->14
+   * 12->15
+   * 13->16
    * 14->17
+   * on top of that for some zones you may get +0x20 or +0x60 if it has subzones (pot size setting)
  * For MPB -> UIB communication the fields in bold contain eg. info about zone temperature (hot zone: 8C => 1 bar, 4c => 2 bars, cc => 3 bars), 0D is not clear to me, but maybe it just indicates that it is heating?
  * The last byte, for both main message and ACK is XOR of all previous bytes
  * ACK consists of byte 98, last byte of the acknowledged message and then XOR of the last two bytes
